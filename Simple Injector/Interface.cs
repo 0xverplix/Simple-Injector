@@ -136,6 +136,13 @@ namespace Simple_Injector
 
         private void InjectDLLButton_Click(object sender, EventArgs e)
         {
+            // Clear the status group box
+
+            if(StatusLabel.Text.Length > 0)
+            {
+                StatusLabel.Text = "";
+            }
+
             // Get the chosen process
 
             var processName = selectedProcessTextBox.Text;
@@ -158,7 +165,7 @@ namespace Simple_Injector
             {
                 // Notify user that they need to select a process and a DLL file
                 
-                MessageBox.Show(@"Ensure a process and DLL file is chosen"); 
+                MessageBox.Show("Ensure a process and DLL file is chosen"); 
             }
         }
 

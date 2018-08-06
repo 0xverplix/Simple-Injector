@@ -56,7 +56,7 @@ namespace Simple_Injector
             
             var processId = Process.GetProcessesByName(processName)[0].Id;    
                 
-            // Get the address of LoadLibraryA
+            // Get the Load Library Pointer
             
             var loadLibraryA = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
 
@@ -86,9 +86,9 @@ namespace Simple_Injector
             
             // Allocate memory in the process
             
-            var memory = VirtualAllocEx(processHandle, IntPtr.Zero, (uint)(dllPath.Length + 1), MemoryCommit | MemoryReserve, PageReadWrite);
+            var memoryPointer = VirtualAllocEx(processHandle, IntPtr.Zero, (uint)(dllPath.Length + 1), MemoryCommit | MemoryReserve, PageReadWrite);
             
-            if (memory == IntPtr.Zero)
+            if (memoryPointer == IntPtr.Zero)
             {
                 _statusLogger.LogStatus("Failed to allocate memory");
             }
@@ -100,7 +100,7 @@ namespace Simple_Injector
             
             // Write memory in the process
             
-            if (WriteProcessMemory(processHandle, memory, Encoding.Default.GetBytes(dllPath), (uint)(dllPath.Length + 1), 0) == 0)
+            if (WriteProcessMemory(processHandle, memoryPointer, Encoding.Default.GetBytes(dllPath), (uint)(dllPath.Length + 1), 0) == 0)
             {
                 _statusLogger.LogStatus("Failed to write memory");
             }
@@ -112,7 +112,7 @@ namespace Simple_Injector
 
             // Create a thread to call LoadLibraryA in the process
             
-            if (CreateRemoteThread(processHandle, IntPtr.Zero, 0, loadLibraryA, memory, 0, IntPtr.Zero) == IntPtr.Zero)
+            if (CreateRemoteThread(processHandle, IntPtr.Zero, 0, loadLibraryA, memoryPointer, 0, IntPtr.Zero) == IntPtr.Zero)
             {
                 _statusLogger.LogStatus("Failed to create remote thread");
             }
