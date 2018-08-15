@@ -1,33 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Text;
 using static Simple_Injector.Logger;
+using static Simple_Injector.Etc.Native;
 
 namespace Simple_Injector
 {
     public class Injector
     {
-        // DLL imports
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern IntPtr GetModuleHandle(string lpModuleName);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint flAllocationType, uint flProtect);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern int WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, uint nSize, int lpNumberOfBytesWritten);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern IntPtr CreateRemoteThread(IntPtr hProcess, IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
-
         // Privileges 
 
         private const int ProcessCreateThread = 0x0002;
@@ -97,10 +77,10 @@ namespace Simple_Injector
             {
                 _statusLogger.LogStatus("Successfully allocated memory");
             }
-            
+
             // Write memory in the process
-            
-            if (WriteProcessMemory(processHandle, memoryPointer, Encoding.Default.GetBytes(dllPath), (uint)(dllPath.Length + 1), 0) == 0)
+
+            if (!WriteProcessMemory(processHandle, memoryPointer, Encoding.Default.GetBytes(dllPath), (uint)(dllPath.Length + 1), 0))
             {
                 _statusLogger.LogStatus("Failed to write memory");
             }
@@ -111,8 +91,10 @@ namespace Simple_Injector
             }
 
             // Create a thread to call LoadLibraryA in the process
+
+            var threadHandle = CreateRemoteThread(processHandle, IntPtr.Zero, 0, loadLibraryA, memoryPointer, 0, IntPtr.Zero);
             
-            if (CreateRemoteThread(processHandle, IntPtr.Zero, 0, loadLibraryA, memoryPointer, 0, IntPtr.Zero) == IntPtr.Zero)
+            if (threadHandle == IntPtr.Zero)
             {
                 _statusLogger.LogStatus("Failed to create remote thread");
             }

@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Etc\Native.cs" />
     <Compile Include="Interface.cs">
       <SubType>Form</SubType>
     </Compile>
