@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Simple_Injector.Etc
 {
-    // Referenced from https://github.com/violarulan/shellcodes/blob/master/dllmain_x64.asm
+    // Shellcode referenced from https://github.com/vmcall/loadlibrayy/blob/master/Shellcodes/threadhijack_loadlibrary_x64.asm
     
     public static class Shellcode
     {
