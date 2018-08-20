@@ -8,7 +8,7 @@ namespace Simple_Injector.Etc
         #region Api Imports
         
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
+        public static extern IntPtr OpenProcess(ProcessPrivileges dwDesiredAccess, bool bInheritHandle, int dwProcessId);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr GetModuleHandle(string lpModuleName);
@@ -17,7 +17,7 @@ namespace Simple_Injector.Etc
         public static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint flAllocationType, uint flProtect);
+        public static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, MemoryAllocation flAllocationType, MemoryProtection flProtect);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, uint nSize, int lpNumberOfBytesWritten);
@@ -207,6 +207,29 @@ namespace Simple_Injector.Etc
 
         #region Permissions
 
+        public enum ProcessPrivileges
+        {
+            CreateThread = 0x02,
+            QueryInformation = 0x0400,
+            VmOperation = 0x08,
+            VmWrite = 0x0020,
+            VmRead = 0x0010,
+            AllAccess = CreateThread | QueryInformation | VmOperation | VmWrite | VmRead
+            
+        }
+        
+        public enum MemoryAllocation
+        {
+            Commit = 0x1000,
+            Reserve = 0x2000,
+            AllAccess = Commit | Reserve
+            
+        }
+
+        public enum MemoryProtection
+        {
+            ReadWrite = 0x04  
+        }
         
 
         #endregion

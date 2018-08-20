@@ -8,21 +8,6 @@ namespace Simple_Injector
 {
     public class Injector
     {
-        // Privileges 
-
-        private const int ProcessCreateThread = 0x0002;
-        private const int ProcessQueryInformation = 0x0400;
-        private const int ProcessVmOperation = 0x0008;
-        private const int ProcessVmWrite = 0x0020;
-        private const int ProcessVmRead = 0x0010;
-        private const int ProcessAllAccess = ProcessCreateThread | ProcessQueryInformation | ProcessVmOperation | ProcessVmWrite | ProcessVmRead;
-
-        // Memory Allocation
-
-        private const uint MemoryCommit  = 0x00001000;
-        private const uint MemoryReserve  = 0x00002000;
-        private const uint PageReadWrite  = 4;
-
         private readonly IStatusLogger _statusLogger;
 
         public Injector(IStatusLogger statusLogger)
@@ -52,7 +37,7 @@ namespace Simple_Injector
                         
             // Get the handle for the process
             
-            var processHandle = OpenProcess(ProcessAllAccess, false, processId);
+            var processHandle = OpenProcess(ProcessPrivileges.AllAccess, false, processId);
 
             if (processHandle == IntPtr.Zero)
             {
@@ -66,7 +51,7 @@ namespace Simple_Injector
             
             // Allocate memory in the process
             
-            var memoryPointer = VirtualAllocEx(processHandle, IntPtr.Zero, (uint)(dllPath.Length + 1), MemoryCommit | MemoryReserve, PageReadWrite);
+            var memoryPointer = VirtualAllocEx(processHandle, IntPtr.Zero, (uint)(dllPath.Length + 1), MemoryAllocation.AllAccess, MemoryProtection.ReadWrite);
             
             if (memoryPointer == IntPtr.Zero)
             {

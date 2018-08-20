@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Etc\Native.cs" />
+    <Compile Include="Etc\Shellcode.cs" />
     <Compile Include="Interface.cs">
       <SubType>Form</SubType>
     </Compile>
