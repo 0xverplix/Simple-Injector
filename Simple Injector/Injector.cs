@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Text;
+using System.Windows.Forms.VisualStyles;
 using static Simple_Injector.Logger;
 using static Simple_Injector.Etc.Native;
 
@@ -23,9 +24,9 @@ namespace Simple_Injector
                 
             // Get the Load Library Pointer
             
-            var loadLibraryA = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
+            var loadLibraryPointer = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
 
-            if (loadLibraryA == IntPtr.Zero)
+            if (loadLibraryPointer == IntPtr.Zero)
             {
                 _statusLogger.LogStatus("Failed to find kernel32.dll");
             }
@@ -75,9 +76,9 @@ namespace Simple_Injector
                 _statusLogger.LogStatus("Successfully wrote memory");
             }
 
-            // Create a thread to call LoadLibraryA in the process
+            // Create a remote thread to call LoadLibraryA in the process
 
-            var threadHandle = CreateRemoteThread(processHandle, IntPtr.Zero, 0, loadLibraryA, memoryPointer, 0, IntPtr.Zero);
+            var threadHandle = CreateRemoteThread(processHandle, IntPtr.Zero, 0, loadLibraryPointer, memoryPointer, 0, IntPtr.Zero);
             
             if (threadHandle == IntPtr.Zero)
             {
@@ -86,6 +87,18 @@ namespace Simple_Injector
 
             else
             {
+                // Wait for remote thread to finish
+
+                WaitForSingleObject(threadHandle, 0xFFFFFFFF);
+                
+                // Close handle to the thread
+
+                CloseHandle(threadHandle);
+                
+                // Free the allocated memory
+
+                VirtualFreeEx(processHandle, memoryPointer, 0, MemoryAllocation.Release);
+                
                 _statusLogger.LogStatus("Successfully created remote thread");
                 
                 _statusLogger.LogStatus("Successfully injected DLL");
