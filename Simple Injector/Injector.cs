@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Text;
-using System.Windows.Forms.VisualStyles;
 using static Simple_Injector.Logger;
 using static Simple_Injector.Etc.Native;
 
