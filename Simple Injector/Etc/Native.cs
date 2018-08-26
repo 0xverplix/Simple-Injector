@@ -44,8 +44,8 @@ namespace Simple_Injector.Etc
             CreateThread = 0x02,
             QueryInformation = 0x0400,
             VmOperation = 0x08,
-            VmWrite = 0x0020,
-            VmRead = 0x0010,
+            VmWrite = 0x20,
+            VmRead = 0x10,
             AllAccess = CreateThread | QueryInformation | VmOperation | VmWrite | VmRead
             
         }
