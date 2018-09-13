@@ -1,5 +1,5 @@
 # Simple Injector
-A simple DLL injector written in C# that injects a DLL into a running process
+A DLL injector written in C# that uses the CreateRemoteThread method to execute a DLL within a process.
 
 ### How does it work?
 The process of injecting a DLL into a running process is accomplished via 5 steps
