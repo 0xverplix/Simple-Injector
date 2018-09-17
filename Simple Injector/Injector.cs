@@ -16,11 +16,7 @@ namespace Simple_Injector
         }
 
         public void Inject(string processName, string dllPath)
-        {           
-            // Get the process id
-            
-            var processId = Process.GetProcessesByName(processName)[0].Id;    
-                
+        {                        
             // Get the Load Library Pointer
             
             var loadLibraryPointer = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
@@ -34,10 +30,10 @@ namespace Simple_Injector
             {
                 _statusLogger.LogStatus("Successfully loaded kernel32.dll");
             }
-                        
+
             // Get the handle for the process
-            
-            var processHandle = OpenProcess(ProcessPrivileges.AllAccess, false, processId);
+
+            var processHandle = Process.GetProcessesByName(processName)[0].Handle;
 
             if (processHandle == IntPtr.Zero)
             {
