@@ -33,7 +33,9 @@ namespace Simple_Injector
 
             // Get the handle for the process
 
-            var processHandle = Process.GetProcessesByName(processName)[0].Handle;
+            var processId = Process.GetProcessesByName(processName)[0].Id;
+
+            var processHandle = OpenProcess(ProcessPrivileges.AllAccess, false, processId);
 
             if (processHandle == IntPtr.Zero)
             {
