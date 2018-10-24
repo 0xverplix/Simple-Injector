@@ -1,18 +1,5 @@
 # Simple Injector
-A DLL injector written in C# that uses the CreateRemoteThread method to execute a DLL within a process.
-
-## Important
-
-I am currently in the process of remaking this injector using my Simple-Injection library. The Injector will feature a better interface, more injections methods (from Simple-Injection) and more options such as erasing headers. This is a pretty terrible injector in its current state so I would reccomend waiting for the updated version before using it.
-
-### How does it work?
-The process of injecting a DLL into a running process is accomplished via 5 steps
-
-* The pointer to the address of the LoadLibraryA module (from kernel32.dll) is found
-* The handle of the chosen process is then found
-* Memory is then allocated within the process for the DLL name to be written
-* The name of the DLL is then written into the processes memory
-* Finally, a thread is created in the process which calls the LoadLibraryA module, which in turn invokes the DLL
+A DLL injector written in C# that implements the Simple-Injection library to execute a DLL within a process.
 
 ### Screenshot
-![alt text](https://i.imgur.com/7pPS763.png)
+![alt text](https://i.imgur.com/jPnuhWP.png)
